@@ -69,6 +69,27 @@ RC CreateThread( uval32 pc, uval32 sp, uval32 priority )
   return sysReturn;
 } 
 
+RC DestroyThread(ThreadId tid){
+  myprint("Destroy Thread");
+  return 0;
+}
+
+RC Yield(){
+  myprint("Yield");
+  return 0;
+}
+
+RC Suspend(){
+  myprint("Suspend");
+  return 0;
+}
+
+RC ResumeThread(ThreadId tid){
+  myprint("ResumeThread");
+  return 0;
+}
+
+
 void 
 Idle() 
 { 
