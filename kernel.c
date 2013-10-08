@@ -11,8 +11,18 @@ Stack KernelStack;
 
 void
 InitKernel(void) {
+  // initialize Queues
+  ReadyQ = CreateList(L_PRIORITY);
+  BlockedQ = CeateList(L_WAITING);
+  FreeQ = CreateList(UNDEF);
+
+
+  
+
+
   Active = CreateTD(1);
   InitTD(Active, 0, 0, 1);  //Will be set with proper return registers on context switch
+
 #ifdef NATIVE
   InitTD(&Kernel, (uval32) SysCallHandler, (uval32) &(KernelStack.stack[STACKSIZE]), 0);
   Kernel.regs.sr = DEFAULT_KERNEL_SR;
@@ -31,20 +41,8 @@ void K_SysCall( SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2)
   RC returnCode ; 
   switch( type ) {
     case SYS_CREATE: 
-      returnCode = CreateThread( arg0, arg1, arg2 ) ; 
-      break ;
-    case SYS_DESTROY:
-      returnCode = DestroyThread(arg0);
-      break;
-    case SYS_RESUME:
-      returnCode = ResumeThread(arg0);
-      break;
-    case SYS_YIELD:
-      returnCode = Yield();
-      break;
-    case SYS_SUSPEND:
-      returnCode = Suspend();
-      break;
+    returnCode = CreateThread( arg0, arg1, arg2 ) ; 
+    break ; 
   default:
     myprint("Invalid SysCall type\n");
     returnCode = RC_FAILED;
@@ -62,26 +60,6 @@ RC CreateThread( uval32 pc, uval32 sp, uval32 priority )
   myprint("CreateThread ");
   return sysReturn;
 } 
-
-RC DestroyThread(ThreadId tid){
-  myprint("Destroy Thread");
-  return 0;
-}
-
-RC Yield(){
-  myprint("Yield");
-  return 0;
-}
-
-RC Suspend(){
-  myprint("Suspend");
-  return 0;
-}
-
-RC ResumeThread(ThreadId tid){
-  myprint("ResumeThread");
-  return 0;
-}
 
 void 
 Idle() 
