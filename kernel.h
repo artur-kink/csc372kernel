@@ -16,6 +16,13 @@ LL *ReadyQ, *BlockedQ, FreeQ;
 extern TD *Active, Kernel;
 
 ThreadId CreateThread( uval32 pc, uval32 stackSize, uval32 priority );
+
+RC DestroyThread(ThreadId tid);
+RC Yield();
+RC Suspend();
+RC ResumeThread(ThreadId tid);
+
+
 void Idle(void);
 void InitKernel(void);  
 

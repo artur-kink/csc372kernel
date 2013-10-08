@@ -16,10 +16,6 @@ InitKernel(void) {
   BlockedQ = CeateList(L_WAITING);
   FreeQ = CreateList(UNDEF);
 
-
-  
-
-
   Active = CreateTD(1);
   InitTD(Active, 0, 0, 1);  //Will be set with proper return registers on context switch
 
@@ -40,10 +36,22 @@ void K_SysCall( SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2)
 
   RC returnCode ; 
   switch( type ) {
-    case SYS_CREATE: 
-    returnCode = CreateThread( arg0, arg1, arg2 ) ; 
-    break ; 
-  default:
+    case SYS_CREATE:
+      returnCode = CreateThread( arg0, arg1, arg2 ) ;
+      break ;
+    case SYS_DESTROY:
+      returnCode = DestroyThread(arg0);
+      break;
+    case SYS_RESUME:
+      returnCode = ResumeThread(arg0);
+      break;
+    case SYS_YIELD:
+      returnCode = Yield();
+      break;
+    case SYS_SUSPEND:
+      returnCode = Suspend();
+      break;
+    default:
     myprint("Invalid SysCall type\n");
     returnCode = RC_FAILED;
     break;
