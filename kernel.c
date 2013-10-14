@@ -1,19 +1,12 @@
-#include "defines.h"
-#include "list.h"
 #include "kernel.h"
-#include "main.h"
-
-#include <stdlib.h>
-#include <assert.h>
 
 TD *Active, Kernel;
 Stack KernelStack;
 
-void
-InitKernel(void) {
+void InitKernel() {
   // initialize Queues
   ReadyQ = CreateList(L_PRIORITY);
-  BlockedQ = CeateList(L_WAITING);
+  BlockedQ = CreateList(L_WAITING);
   FreeQ = CreateList(UNDEF);
 
   Active = CreateTD(1);
@@ -52,7 +45,7 @@ void K_SysCall( SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2)
       returnCode = Suspend();
       break;
     default:
-    myprint("Invalid SysCall type\n");
+    //myprint("Invalid SysCall type\n");
     returnCode = RC_FAILED;
     break;
   } 
@@ -65,27 +58,27 @@ void K_SysCall( SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2)
 RC CreateThread( uval32 pc, uval32 sp, uval32 priority ) 
 { 
   RC sysReturn = RC_SUCCESS;
-  myprint("CreateThread ");
+  //myprint("CreateThread ");
   return sysReturn;
 } 
 
 RC DestroyThread(ThreadId tid){
-  myprint("Destroy Thread");
+  //myprint("Destroy Thread");
   return 0;
 }
 
 RC Yield(){
-  myprint("Yield");
+  //myprint("Yield");
   return 0;
 }
 
 RC Suspend(){
-  myprint("Suspend");
+  //myprint("Suspend");
   return 0;
 }
 
 RC ResumeThread(ThreadId tid){
-  myprint("ResumeThread");
+  //myprint("ResumeThread");
   return 0;
 }
 

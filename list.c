@@ -1,11 +1,6 @@
-#include "defines.h"
 #include "list.h"
-#include "main.h"
 
-#include <stdlib.h>
-
-TD *CreateTD(ThreadId tid)
-{
+TD *CreateTD(ThreadId tid){
   TD *thread = (TD *)malloc(sizeof(TD));
 
   if(thread != NULL) {
@@ -20,29 +15,27 @@ TD *CreateTD(ThreadId tid)
     thread->regs.sp = 0;
     thread->regs.sr = 0;
   } else {
-    myprint("Failed to allocate new thread\n");
+    //myprint("Failed to allocate new thread\n");
   }
 
   return thread;
 }
 
-void InitTD(TD *td, uval32 pc, uval32 sp, uval32 priority) 
-{ 
+void InitTD(TD *td, uval32 pc, uval32 sp, uval32 priority) { 
   if(td != NULL) {
     td->regs.pc  = pc; 
     td->regs.sp = sp; 
     td->regs.sr  = DEFAULT_THREAD_SR; 
     td->priority = priority; 
   } else {
-    myprint("Tried to initialize NULL pointer\n");
+    //myprint("Tried to initialize NULL pointer\n");
   }
 } 
 
 
 /** allocates and properly initializes a list structure and 
 *   Returns a pointer to it or null.*/
-LL * CreateList(ListType type)
-{
+LL * CreateList(ListType type){
     LL* list;
     list = malloc(sizeof(LL));
     if(list == NULL){
@@ -56,8 +49,7 @@ LL * CreateList(ListType type)
 
 /** destroys list, whose pointer is passed in as an argument. 
 *   Returns 0 if successful, and -1 otherwise. */
-RC DestroyList(LL *list)
-{
+RC DestroyList(LL *list){
     TD *curr, *next;
     if(list){
         curr = list->head;
@@ -78,8 +70,7 @@ RC DestroyList(LL *list)
 
 /** dequeues the TD at the head of list and 
 * Returns a pointer to it, or else null. */
-TD * DequeueHead(LL *list)
-{
+TD* DequeueHead(LL *list){
     TD *td;
     if(list){
       td = list->head;
@@ -97,8 +88,7 @@ TD * DequeueHead(LL *list)
 
 /** if list is a priority list, then enqueues td in its proper location. 
 * Returns -1 if list is not a priority list and 0 otherwise. */
-RC PriorityEnqueue(TD *td, LL *list)
-{
+RC PriorityEnqueue(TD* td, LL* list){
   TD *curr, *prev;
   int priority;
 
@@ -235,8 +225,7 @@ TD * FindTD(ThreadId tid, LL *list){
 }
 
 /** dequeues td from whatever list it might be in, if it is in one.*/
-RC DequeueTD(TD *td)
-{
+RC DequeueTD(TD *td){
   TD *curr;
   LL *list;
   list = td->inlist;
