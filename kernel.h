@@ -6,6 +6,7 @@
 
 #include "defines.h"
 #include "list.h"
+#include "user.h"
 
 typedef struct type_STACK Stack;
 

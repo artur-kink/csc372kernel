@@ -1,6 +1,6 @@
-#include "defines.h"
-#include "main.h"
+#include "main.c"
 #include "kernel.h"
+#include "defines.h"
 
 #ifdef NATIVE
 /* The assembly language code below handles CPU reset processing */
@@ -15,6 +15,9 @@ void the_reset (void)
   asm (".set		noat");					// Magic, for the C compiler
   asm (".set		nobreak");				// Magic, for the C compiler
   asm ("br		main");		// Call the C language main program
+  //asm ("movhi r1, %hi(main)" );
+  //asm ("ori r1, r1, %lo(main)" );
+  //asm ("jmp r1");
 }
 
 
@@ -74,5 +77,5 @@ void the_isr (void)
 #endif /* NATIVE */
 
 void interrupt_handler(void){
-
+	myprint("exception\n");
 }

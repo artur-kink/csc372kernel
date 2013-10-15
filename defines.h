@@ -2,7 +2,7 @@
 #define _DEFINES_H_
 
 //comment out to compile on x86
-//#define NATIVE
+#define NATIVE
 
 typedef unsigned char  uval8;
 typedef unsigned int   uval32;
@@ -49,16 +49,28 @@ typedef int bool;
   asm volatile("rdctl r10, ctl1\n\t"				\
 	       "stw r10, %0" : : "m" (Active->regs.sr))
 
-#define MOVE_ACTIVE_TO_SP				\
-  asm volatile("ldw r27, %0" : : "m"(Active->regs.sp))	
+//#define MOVE_ACTIVE_TO_SP				\
+//  asm volatile("ldw r27, %0" : : "m"(Active->regs.sp))	
 
-#define MOVE_ACTIVE_TO_PC				\
-  asm volatile("ldw r29, %0" : : "m"(Active->regs.pc)) 
+//#define MOVE_ACTIVE_TO_PC				\
+//  asm volatile("ldw r29, %0" : : "m"(Active->regs.pc)) 
 
-#define MOVE_ACTIVE_TO_SR					\
-  asm volatile("ldw r10, %0\n\t"				\
-	       "wrctl ctl1, r10" : : "m" (Active->regs.sr))
+//#define MOVE_ACTIVE_TO_SR					\
+//  asm volatile("ldw r10, %0\n\t"				\
+//	       "wrctl ctl1, r10" : : "m" (Active->regs.sr))
+#define MOVE_ACTIVE_TO_SP \
+ asm volatile("ldw r3, %0" : : "m"(Active)); \
+ asm volatile("ldw r27, %0" : : "m"(Active->regs.sp))
+ 
+#define MOVE_ACTIVE_TO_PC \
+ asm volatile("ldw r3, %0" : : "m"(Active)); \
+ asm volatile("ldw r29, %0" : : "m"(Active->regs.pc))
 
+#define MOVE_ACTIVE_TO_SR \
+ asm volatile("ldw r3, %0" : : "m"(Active)); \
+ asm volatile("ldw r10, %0\n\t" \
+ "wrctl ctl1, r10" : : "m" (Active->regs.sr))
+		   
 #define SET_KERNEL_SP							\
   asm volatile("ldw r27, %0\n\t"					\
 	       "subi r27, r27, %1" : : "m" (Kernel.regs.sp), "i" (SYS_HANDLER_OFFSET))

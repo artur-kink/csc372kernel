@@ -4,6 +4,7 @@ TD *Active, Kernel;
 Stack KernelStack;
 
 void InitKernel(){
+    myprint("Initializing kernel\n");
     //Initialize Queues
     ReadyQ = CreateList(L_PRIORITY);
     BlockedQ = CreateList(L_WAITING);
@@ -13,13 +14,12 @@ void InitKernel(){
     for(i = 0; i < MAX_THREADS; i++){
         Descriptors[i].tid = MAX_THREADS;
     }
-
-    Active = &Descriptors[CreateThread((uval32)(&Idle), 0, 1)];
-
+	
 #ifdef NATIVE
     InitTD(&Kernel, (uval32) SysCallHandler, (uval32) &(KernelStack.stack[STACKSIZE]), 0);
     Kernel.regs.sr = DEFAULT_KERNEL_SR;
 #endif /* NATIVE */
+	Active = 0;
 }
 
 void K_SysCall(SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2){
@@ -53,6 +53,7 @@ void K_SysCall(SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2){
             returnCode = RC_FAILED;
             break;
     }
+	
 #ifdef NATIVE
     asm volatile("ldw r8, %0" : : "m" (sysMode) : "r8");
     asm("trap");
@@ -79,9 +80,18 @@ ThreadId CreateThread(uval32 pc, uval32 sp, uval32 priority){
         return RC_FAILED;
 
     InitTD(newThread, pc, sp, priority);
-
-    PriorityEnqueue(newThread, ReadyQ);
-
+	if(Active){
+		if(newThread->priority > Active->priority){
+			myprint("New thread has higher priority, switching to new thread.\n");
+			PriorityEnqueue(Active, ReadyQ);
+			Active = newThread;
+		}else{
+			PriorityEnqueue(newThread, ReadyQ);
+		}
+	}else{
+		myprint("Active is new thread\n");
+		Active = newThread;
+	}
     myprint("CreateThread\n");
     return newThread->tid;
 }
@@ -119,8 +129,12 @@ RC Yield(){
         myprint("No active thread\n");
         return 0;
     }
+	int activeId = Active->tid;
     PriorityEnqueue(Active, ReadyQ);
     Active = DequeueHead(ReadyQ);
+	if(activeId == Active->tid){
+		myprint("Yield changed nothing\n");
+	}
     return RC_SUCCESS;
 }
 

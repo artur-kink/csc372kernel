@@ -1,3 +1,4 @@
+
 #include "defines.h"
 #include "list.c"
 //#include "user.c"
@@ -10,7 +11,7 @@
 #ifndef NATIVE
 #include <stdio.h>
 #endif /* NATIVE */
-  
+
 int main(void){   
   InitKernel();//Initialize all kernel data structures
   

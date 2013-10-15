@@ -32,10 +32,21 @@ RC SysCall(SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2){
 } 
 
 void mymain(){ 
-    RC ret = SysCall(SYS_CREATE, 0x1234, 0, 0);
+	myprint("Starting mymain\n");
+    RC ret = SysCall(SYS_CREATE, mymain+12*4, 0, 1);
+	myprint("Called CREATE\n");
+	static int counter = 0;
     myprint("DONE\n");
-    while(1){
-        myprint("m");
-        Yield();
-    }
+	if(counter == 0){
+		counter = 1;
+		while(1){
+			myprint("m1");
+			SysCall(SYS_YIELD, 0, 0, 0);
+		}
+	}else{
+		while(1){
+			myprint("m2");
+			SysCall(SYS_YIELD, 0, 0, 0);
+		}
+	}
 }
