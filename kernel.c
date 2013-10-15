@@ -9,7 +9,8 @@ void InitKernel() {
   BlockedQ = CreateList(L_WAITING);
   FreeQ = CreateList(UNDEF);
 
-  Active = CreateTD(1);
+  LastCreatedId = 0;
+  Active = CreateTD(++LastCreatedId);
   InitTD(Active, 0, 0, 1);  //Will be set with proper return registers on context switch
 
 #ifdef NATIVE
@@ -55,30 +56,37 @@ void K_SysCall( SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2)
 #endif /* NATIVE */
 }
 
-RC CreateThread( uval32 pc, uval32 sp, uval32 priority ) 
-{ 
-  RC sysReturn = RC_SUCCESS;
-  //myprint("CreateThread ");
-  return sysReturn;
-} 
+RC CreateThread( uval32 pc, uval32 sp, uval32 priority ){
+
+    TD* newThread = CreateTD(++LastCreatedId);
+    if(newThread == 0)
+        return RC_FAILED;
+    
+    InitTD(newThread, pc, sp, priority);
+
+    PriorityEnqueue(newThread, ReadyQ);
+
+    myprint("CreateThread\n");
+    return RC_SUCCESS;
+}
 
 RC DestroyThread(ThreadId tid){
-  //myprint("Destroy Thread");
+  myprint("Destroy Thread");
   return 0;
 }
 
 RC Yield(){
-  //myprint("Yield");
+  myprint("Yield");
   return 0;
 }
 
 RC Suspend(){
-  //myprint("Suspend");
+  myprint("Suspend");
   return 0;
 }
 
 RC ResumeThread(ThreadId tid){
-  //myprint("ResumeThread");
+  myprint("ResumeThread");
   return 0;
 }
 

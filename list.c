@@ -15,7 +15,7 @@ TD *CreateTD(ThreadId tid){
     thread->regs.sp = 0;
     thread->regs.sr = 0;
   } else {
-    //myprint("Failed to allocate new thread\n");
+    myprint("Failed to allocate new thread\n");
   }
 
   return thread;
@@ -28,7 +28,7 @@ void InitTD(TD *td, uval32 pc, uval32 sp, uval32 priority) {
     td->regs.sr  = DEFAULT_THREAD_SR; 
     td->priority = priority; 
   } else {
-    //myprint("Tried to initialize NULL pointer\n");
+    myprint("Tried to initialize NULL pointer\n");
   }
 } 
 
