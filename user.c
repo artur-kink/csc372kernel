@@ -35,7 +35,7 @@ void mymain(){
     RC ret = SysCall(SYS_CREATE, 0x1234, 0, 0);
     myprint("DONE\n");
     while(1){
+        myprint("m");
         Yield();
-        //myprint(".");
     }
 }

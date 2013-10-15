@@ -45,6 +45,9 @@ void K_SysCall(SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2){
         case SYS_SUSPEND:
             returnCode = Suspend();
             break;
+        case SYS_PRIORITY:
+            returnCode = ChangeThreadPriority(arg0, arg1);
+            break;
         default:
             myprint("Invalid SysCall type\n");
             returnCode = RC_FAILED;
@@ -76,20 +79,17 @@ RC DestroyThread(ThreadId tid){
         Active = DequeueHead(ReadyQ);
     }
     DestroyTD(tid);
-    return 0;
+    return RC_SUCCESS;
 }
 
 RC Yield(){
     myprint("Yield\n");
     if(!Active){
         myprint("No active thread\n");
-    } else{
-        myprint("Active thread exists\n");
+        return 0;
     }
     PriorityEnqueue(Active, ReadyQ);
-    myprint("Enqueued\n");
     Active = DequeueHead(ReadyQ);
-    myprint("New Active\n");
     return RC_SUCCESS;
 }
 
@@ -105,6 +105,13 @@ RC ResumeThread(ThreadId tid){
     TD* resumeThread = FindTD(tid, BlockedQ);
     DequeueTD(resumeThread);
     PriorityEnqueue(resumeThread, ReadyQ);
+    return 0;
+}
+
+RC ChangeThreadPriority(ThreadId tid, int newPriority){
+    if(tid < MAX_THREADS){
+        Descriptors[tid].priority = newPriority;
+    }
     return 0;
 }
 

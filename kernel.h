@@ -13,8 +13,6 @@ struct type_STACK{
     uval8 stack[STACKSIZE];
 };
 
-
-
 LL *ReadyQ, *BlockedQ, *FreeQ;
 
 extern TD *Active, Kernel;
@@ -25,6 +23,7 @@ RC DestroyThread(ThreadId tid);
 RC Yield();
 RC Suspend();
 RC ResumeThread(ThreadId tid);
+RC ChangeThreadPriority(ThreadId tid, int newPriority);
 
 void Idle(void);
 void InitKernel();
