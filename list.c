@@ -45,7 +45,7 @@ void DestroyTD(ThreadId tid){
 
 /**
  * Allocates and properly initializes a list structure and
- * Returns a pointer to it or null.
+ * @return A pointer to it or null.
  */
 LL * CreateList(ListType type){
     LL* list;
@@ -61,7 +61,7 @@ LL * CreateList(ListType type){
 
 /** 
  * Destroys list, whose pointer is passed in as an argument.
- * Returns 0 if successful, and -1 otherwise.
+ * @return 0 if successful, and -1 otherwise.
  */
 RC DestroyList(LL *list){
     TD *curr, *next;
@@ -84,7 +84,7 @@ RC DestroyList(LL *list){
 
 /**
  * Dequeues the TD at the head of list and
- * Returns a pointer to it, or else null.
+ * @return A pointer to it, or else null.
  */
 TD* DequeueHead(LL *list){
     TD *td;
@@ -102,8 +102,10 @@ TD* DequeueHead(LL *list){
     return NULL;
 }
 
-/** if list is a priority list, then enqueues td in its proper location. 
- * Returns -1 if list is not a priority list and 0 otherwise. */
+/**
+ * If list is a priority list, then enqueues td in its proper location.
+ * @return -1 if list is not a priority list and 0 otherwise.
+ */
 RC PriorityEnqueue(TD* td, LL* list){
     TD *curr, *prev;
     int priority;
@@ -150,8 +152,10 @@ RC PriorityEnqueue(TD* td, LL* list){
     return -1;
 }
 
-/** enqueues td at the head of list if list is a LIFO list. 
-  Returns 0 if OK and -1 otherwise.*/
+/**
+ * enqueues td at the head of list if list is a LIFO list.
+ * @return 0 if OK and -1 otherwise.
+ */
 RC EnqueueAtHead(TD *td, LL *list){
     if(list->type == L_LIFO){
         td->link = list->head;
@@ -163,10 +167,12 @@ RC EnqueueAtHead(TD *td, LL *list){
     return -1;
 }
 
-/** if list is a waiting list, then inserts td in its correct position assuming it should
+/**
+ * If list is a waiting list, then inserts td in its correct position assuming it should
  * wait for waittime. The waittime values of the other elements in the list should be
  * properly adjusted.
- * Return -1 if list is not a waiting list and 0 otherwise. */
+ * @return -1 if list is not a waiting list and 0 otherwise.
+ */
 RC WaitListEnqueue(TD *td, int waittime, LL *list){
     TD *curr;
     TD *prev;
@@ -223,8 +229,10 @@ RC WaitListEnqueue(TD *td, int waittime, LL *list){
     return -1;
 }
 
-/** searches list for a TD with a threadID td, and 
- * Returns a pointer to it or null otherwise. */
+/** 
+ * Searches list for a TD with a threadID td, and
+ * @return a pointer to it or null otherwise.
+ */
 TD * FindTD(ThreadId tid, LL *list){
     TD *td;
     td = list->head;
@@ -238,7 +246,9 @@ TD * FindTD(ThreadId tid, LL *list){
     return NULL;
 }
 
-/** dequeues td from whatever list it might be in, if it is in one.*/
+/** 
+ * Dequeues td from whatever list it might be in, if it is in one.
+ */
 RC DequeueTD(TD *td){
     TD *curr;
     LL *list;

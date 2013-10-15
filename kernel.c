@@ -4,7 +4,7 @@ TD *Active, Kernel;
 Stack KernelStack;
 
 void InitKernel(){
-    //initialize Queues
+    //Initialize Queues
     ReadyQ = CreateList(L_PRIORITY);
     BlockedQ = CreateList(L_WAITING);
     FreeQ = CreateList(UNDEF);
@@ -134,7 +134,7 @@ RC Suspend(){
     myprint("Suspend");
     EnqueueAtHead(Active, BlockedQ);
     Active = DequeueHead(ReadyQ);
-    return 0;
+    return RC_SUCCESS;
 }
 
 /**
@@ -147,8 +147,15 @@ RC Suspend(){
 RC ResumeThread(ThreadId tid){
     myprint("ResumeThread");
     TD* resumeThread = FindTD(tid, BlockedQ);
-    DequeueTD(resumeThread);
-    PriorityEnqueue(resumeThread, ReadyQ);
+    if(resumeThread){
+        DequeueTD(resumeThread);
+        if(resumeThread->priority > Active->priority){
+            PriorityEnqueue(Active, ReadyQ);
+            Active = resumeThread;
+        }else{
+            PriorityEnqueue(resumeThread, ReadyQ);
+        }
+    }
     return 0;
 }
 
@@ -165,6 +172,13 @@ RC ResumeThread(ThreadId tid){
 RC ChangeThreadPriority(ThreadId tid, int newPriority){
     if(tid < MAX_THREADS){
         Descriptors[tid].priority = newPriority;
+        if(Descriptors[tid].priority > Active->priority){
+            if(Descriptors[tid].inlist == ReadyQ){
+                PriorityEnqueue(Active, ReadyQ);
+                DequeueTD(&Descriptors[tid]);
+                Active = &Descriptors[tid];
+            }
+        }
     }
     return 0;
 }
