@@ -18,8 +18,6 @@ void InitKernel(){
 #endif /* NATIVE */
 }
 
-
-
 void K_SysCall( SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2){ 
 #ifdef NATIVE
   asm(".align 4; .global SysCallHandler; SysCallHandler:");
@@ -74,10 +72,16 @@ RC DestroyThread(ThreadId tid){
 }
 
 RC Yield(){
-  myprint("Yield");
-  
+  myprint("Yield\n");
+  if(!Active){
+      myprint("No active thread\n");
+  }else{
+      myprint("Active thread exists\n");
+  }
   PriorityEnqueue(Active, ReadyQ);
+  myprint("Enqueued\n");
   Active = DequeueHead(ReadyQ);
+  myprint("New Active\n");
   return RC_SUCCESS;
 }
 
