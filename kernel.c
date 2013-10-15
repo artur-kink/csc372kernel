@@ -75,7 +75,9 @@ RC DestroyThread(ThreadId tid){
 
 RC Yield(){
   myprint("Yield");
-  return 0;
+  PriorityEnqueue(Active, ReadyQ);
+  Active = DequeueHead(ReadyQ);
+  return RC_SUCCESS;
 }
 
 RC Suspend(){
@@ -90,6 +92,7 @@ RC ResumeThread(ThreadId tid){
 
 
 void Idle(){  
+    myprint("Running idle thread\n");
     int i;
     while(1){
         myprint("CPU is idle\n");
