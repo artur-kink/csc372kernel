@@ -75,6 +75,7 @@ RC DestroyThread(ThreadId tid){
 
 RC Yield(){
   myprint("Yield");
+  
   PriorityEnqueue(Active, ReadyQ);
   Active = DequeueHead(ReadyQ);
   return RC_SUCCESS;
@@ -82,11 +83,16 @@ RC Yield(){
 
 RC Suspend(){
   myprint("Suspend");
+  EnqueueAtHead(Active, BlockedQ);
+  Active = DequeueHead(ReadyQ);
   return 0;
 }
 
 RC ResumeThread(ThreadId tid){
   myprint("ResumeThread");
+  TD* resumeThread = FindTD(tid, BlockedQ);
+  DequeueTD(resumeThread);
+  PriorityEnqueue(resumeThread, ReadyQ);
   return 0;
 }
 
