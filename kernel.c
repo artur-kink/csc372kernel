@@ -14,7 +14,7 @@ void InitKernel(){
         Descriptors[i].tid = MAX_THREADS;
     }
 
-    Active = &Descriptors[CreateThread(&Idle, 0, 1)];
+    Active = &Descriptors[CreateThread((uval32)(&Idle), 0, 1)];
 
 #ifdef NATIVE
     InitTD(&Kernel, (uval32) SysCallHandler, (uval32) &(KernelStack.stack[STACKSIZE]), 0);
@@ -59,7 +59,7 @@ void K_SysCall(SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2){
 #endif /* NATIVE */
 }
 
-RC CreateThread(uval32 pc, uval32 sp, uval32 priority){
+ThreadId CreateThread(uval32 pc, uval32 sp, uval32 priority){
 
     TD* newThread = CreateTD();
     if(newThread == 0)

@@ -2,6 +2,7 @@
 #define _LIST_H_
 
 #include "defines.h"
+#include "main.h"
 #include <stdlib.h>
 
 typedef enum{
