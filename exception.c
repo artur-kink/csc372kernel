@@ -73,7 +73,6 @@ void the_isr (void)
 
 #endif /* NATIVE */
 
-void interrupt_handler(void)
-{
+void interrupt_handler(void){
 
 }
