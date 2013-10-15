@@ -3,26 +3,24 @@
 TD *Active, Kernel;
 Stack KernelStack;
 
-void InitKernel() {
-  // initialize Queues
-  ReadyQ = CreateList(L_PRIORITY);
-  BlockedQ = CreateList(L_WAITING);
-  FreeQ = CreateList(UNDEF);
+void InitKernel(){
+    //initialize Queues
+    ReadyQ = CreateList(L_PRIORITY);
+    BlockedQ = CreateList(L_WAITING);
+    FreeQ = CreateList(UNDEF);
 
-  LastCreatedId = 0;
-  Active = CreateTD(++LastCreatedId);
-  InitTD(Active, 0, 0, 1);  //Will be set with proper return registers on context switch
-
+    LastCreatedId = 0;
+    Active = CreateThread(&Idle, 0, 1);
+    
 #ifdef NATIVE
-  InitTD(&Kernel, (uval32) SysCallHandler, (uval32) &(KernelStack.stack[STACKSIZE]), 0);
-  Kernel.regs.sr = DEFAULT_KERNEL_SR;
+    InitTD(&Kernel, (uval32) SysCallHandler, (uval32) &(KernelStack.stack[STACKSIZE]), 0);
+    Kernel.regs.sr = DEFAULT_KERNEL_SR;
 #endif /* NATIVE */
 }
 
 
 
-void K_SysCall( SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2) 
-{ 
+void K_SysCall( SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2){ 
 #ifdef NATIVE
   asm(".align 4; .global SysCallHandler; SysCallHandler:");
   uval32 sysMode = SYS_EXIT;
@@ -46,7 +44,7 @@ void K_SysCall( SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2)
       returnCode = Suspend();
       break;
     default:
-    //myprint("Invalid SysCall type\n");
+    myprint("Invalid SysCall type\n");
     returnCode = RC_FAILED;
     break;
   } 
@@ -67,7 +65,7 @@ RC CreateThread( uval32 pc, uval32 sp, uval32 priority ){
     PriorityEnqueue(newThread, ReadyQ);
 
     myprint("CreateThread\n");
-    return RC_SUCCESS;
+    return newThread->tid;
 }
 
 RC DestroyThread(ThreadId tid){
@@ -91,18 +89,12 @@ RC ResumeThread(ThreadId tid){
 }
 
 
-void 
-Idle() 
-{ 
-  /*
-  int i; 
-  while( 1 ) 
-    { 
-      myprint( "CPU is idle\n" ); 
-      for( i = 0; i < MAX_THREADS; i++ ) 
-	{ 
-	} 
-      Yield(); 
-    } 
-  */
-} 
+void Idle(){  
+    int i;
+    while(1){
+        myprint("CPU is idle\n");
+        for(i = 0; i < MAX_THREADS; i++){
+        }
+        Yield();
+    }
+}

@@ -26,14 +26,15 @@ RC SysCall(SysCallType type, uval32 arg0, uval32 arg1, uval32 arg2){
 	       : : "m" (sysMode), "m" (type), "m" (arg0), "m" (arg1), "m" (arg2)
 	       : "r4", "r5", "r6", "r7", "r8");  
 #else /* NATIVE */
-    CreateThread(arg0, arg1, arg2); //Kernel system call - not normally accessible from user space
+    returnCode = CreateThread(arg0, arg1, arg2); //Kernel system call - not normally accessible from user space
 #endif /* NATIVE */
-    returnCode = RC_SUCCESS; //Change this code to take the actual return value
     return returnCode;
 } 
 
 void mymain(){ 
     RC ret = SysCall(SYS_CREATE, 0x1234, 0, 0);
     myprint("DONE\n");
-    while(1);
+    while(1){
+        //myprint(".");
+    }
 }
